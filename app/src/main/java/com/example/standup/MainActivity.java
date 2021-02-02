@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent notifyIntent = new Intent(this, AlarmReceiver.class);
+        boolean alarmUp = (PendingIntent.getBroadcast(this, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_NO_CREATE) != null);
+        //alarmToggle.setChecked(alarmUp);
         PendingIntent notifyPendingIntent = PendingIntent.getBroadcast(this, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         ToggleButton alarmToggle = findViewById(R.id.alarmToggle);
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity{
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 String toastMessage;
                 if (isChecked) {
-                    long repeatInterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+                    long repeatInterval = 1000;
                     long triggerTime = SystemClock.elapsedRealtime() + repeatInterval;
                     if(alarmManager != null) {
                         alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, repeatInterval, notifyPendingIntent);
@@ -54,7 +56,6 @@ public class MainActivity extends AppCompatActivity{
         });
         notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         createNotificationChannel();
-
     }
 
     public void createNotificationChannel()
